@@ -22,6 +22,6 @@ spec:
     spec:
       containers:
       - name: pokedex
-        image: pokedex-flask
+        image: zdenkoo98/pokedex-flask-nerdearla:1
         ports:
         - containerPort: 5000
