@@ -26,6 +26,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: "{{defaultContext}}:Docker"
-          #file: ./Docker/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/pokedex-flask-nerdearla:${{ github.run_attempt }}

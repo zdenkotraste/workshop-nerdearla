@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: pokedex-flask
+  namespace: nerdearla
+  labels:
+    app: pokedex-flask
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: pokedex-flask
+  template:
+    metadata:
+      labels:
+        app: pokedex-flask
+    spec:
+      containers:
+      - name: pokedex
+        image: zdenkoo98/pokedex-flask-nerdearla:2
+        ports:
+        - containerPort: 5000
