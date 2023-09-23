@@ -25,5 +25,7 @@ sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 rm argocd-linux-amd64
 
 #Clone repo
+git clone https://github.com/zdenkotraste/workshop-nerdearla.git
 
-git clone 
+#Start minikube cluster
+minikube start 

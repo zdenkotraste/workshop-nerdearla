@@ -1,0 +1,27 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pokedex-flask
+  namespace: nerdearla
+  labels:
+    app: pokedex-flask
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: pokedex-flask
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: pokedex-flask
+    spec:
+      containers:
+      - name: pokedex
+        image: pokedex-flask
+        ports:
+        - containerPort: 5000
