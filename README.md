@@ -1,57 +1,58 @@
-# Pokedex, version flask
+# Workshop Nerdearla: De local a Kubernetes 
 
-Pokedex hecha en flask utilizando la API de pokeapi para obtener informacion de distintos pokemones utilizando el buscador o seleccionadolo desde el homepage. 
+## Paso 0: Instalar Herramientas/Entorno de trabajo
 
-## Creacion de la Imagen de nuestra aplicacion
+1. En este repositorio veran un directorio llamado Vagrant, el cual nos permitira levantar una maquina virtual con las herramientas necesarias para el workshop (docker, minikube, kubectl, argocd cli, etc)
 
-1. Si bien nuestra imagen ya esta construida y subida a dockerhub, tambien proveemos en el repo el archivo dockerfile para realizarle modificaciones encima y construir una nueva imagen a su gusto. 
-
-```bash
-docker build . -t zhraste/pokedex-flask .
-```
-
-2. En caso de que quieran subir su imagen a dockerhub, pueden hacerlo mediante el comando docker push
+Para poder levantar esta maquina, iremos al directorio Vagrant y corremos el siguiente comando: 
 
 ```bash
-docker push zhraste/pokedex-flask
+vagrant up
 ```
-NOTA: Es importante que antes de hacer el push nos loguiemos a nuestra cuenta de docker hub con el comando docker login
 
-## Creacion de directorios para los volumenes 
- Una vez lista la imagen, necesitaremos 2 volumenes para este proyecto. En 1 tendremos nuestros archivos estaticos, principalmente archivos de diseño para css como los colores de los tipos de los pokemones por ejemplo. Mientras que en el otro tendremos los archivos html que seran la estructura de la pagina. 
-
-1. Primero crearemos los directorios: 
+2. Ya con la maquina virtual levantada, nos podremos conectar con el siguiente comando 
 
 ```bash
-sudo mkdir /var/flask/pokedex/templates
-sudo mkdir /var/flask/pokedex/static
+vagrant ssh 
 ```
-2. Luego copiaremos los archivos de este repositorio hacia esos directorios locales (estos archivos luego seran utilizados por los pods)
+
+3. Es importante destacar que podemos hacer un tunel de vagrant a nuestra maquina host, esto nos permitira acceder a algun servicio corriendo en la VM desde el host. Para esto, usaremos el siguiente comando:
 
 ```bash
-sudo cp Docker/templates/* /var/flask/pokedex/templates
-sudo cp Docker/static/* /var/flask/pokedex/static
+vagrant ssh -- -L 5000:localhost:5000
 ```
-3. Una vez listos nuestro directorios locales aplicaremos los distintos archivos yaml para crear los volumenes, empezando por los pv y siguiendo por los claim
+
+## Paso 1: Dockerfile
+
+1. Para construir la imagen de docker podremos hacerlo de forma manual descargando el codigo y haciendo un docker build o utilizar la github action ya configurada para que en cada cambio que hagamos en algun archivo del directorio Docker, se ejecute y haga el proceso de construir la imagen y subirla a dockerhub, es importante haber activado Github Actions y configurado los secretos para subir la imagen a dockerhub. 
+
+## Paso 2: Kubernetes
+
+1. Para este paso es tan simple como verificar estar conectados a nuestro cluster de kubernetes (poder ejecutar un kubectl get pods -A sin errores) y asi crear nuestros recursos dentro del directorio Kubernetes con el siguiente comando:
 
 ```bash
-kubectl apply -f Kubernetes/static-pv.yaml
-kubectl apply -f Kubernetes/templates-pv.yaml
-kubectl apply -f Kubernetes/static-claim.yaml
-kubectl apply -f Kubernetes/templates-claim.yaml
+kubectl apply -f Kubernetes/deployment.yaml
 ```
 
-4. Ya creados los volumenes podremos aplicar el archivo del deployment, esto puede tardar un poco ya que tendra que hacer un pull de la imagen:
+En caso de que querramos probar el escalado de nuestros recursos (deployments o replicasets) podremos utilizar un comando similar al siguiente:
 
 ```bash
-kubectl apply -f Kubernetes/pokedex-deployment.yaml
+kubectl scale --replicas=1 deployment/pokedex-flask -n nerdearla 
 ```
 
-5. Por ultimo, crearemos un proxy para poder acceder a los pods desde la IP o DNS de nuestra virtual.
+
+## Paso 3: ArgoCD 
+
+1. Por ultimo, tendremos la parte de ArgoCD. Podremos crear aplicaciones ya sea utilizando la CLI o utilizando la interfaz grafica de Argo. En este caso utilizaremos el archivo deployment.yaml dentro del directorio pokedex-flask en el directorio de ArgoCD. Por ejemplo si quisieramos hacerlo con el ArgoCD CLI: 
 
 ```bash
-kubectl port-forward deployment/pokedex-deployment 5000:5000 --address 0.0.0.0
+argocd app create pokedex --repo https://github.com/zdenkotraste/workshop-nerdearla --path ArgoCD/pokedex-flask --dest-server https://kubernetes.default.svc --dest-namespace nerdearla
 ```
-6. Y listo, ya tendremos nuestro servicio corriendo en 1 pod y siendo accesible desde la IP de la maquina virtual 
-![image.png](./image.png)
 
+Es importante mencionar que en este caso el namespace "nerdearla" ya debe existir. 
+
+Podremos crearlo con el siguiente comando:
+
+```bash
+kubectl create ns nerdearla
+```
