@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
     paths: 
-      - "Docker"
+      - "Docker/**"
 
 jobs:
   build:
