@@ -29,3 +29,6 @@ git clone https://github.com/zdenkotraste/workshop-nerdearla.git
 
 #Start minikube cluster
 minikube start 
+
+#Clone repo 
+git clone https://github.com/zdenkotraste/workshop-nerdearla.git
