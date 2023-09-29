@@ -14,4 +14,4 @@ EXPOSE 5000
 #El comando ejecutado sera python -m flask run --host 0.0.0.0, de esta forma podremos acceder de forma correcta al servicio
 ENTRYPOINT ["python"]
 CMD ["-m", "flask", "run", "--host", "0.0.0.0"]
-#testci
+#testciv2
