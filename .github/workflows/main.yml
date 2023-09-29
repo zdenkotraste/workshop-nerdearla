@@ -27,4 +27,4 @@ jobs:
         with:
           context: "{{defaultContext}}:Docker"
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pokedex-flask-nerdearla:${{ github.run_attempt }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pokedex-flask-nerdearla:${{ github.run_id }}
