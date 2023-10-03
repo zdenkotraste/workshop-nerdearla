@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  pokedex-nerdearla:
+    image: zdenkoo98/pokedex-flask-nerdearla:15
+    container_name: pokedex-compose
+    ports:
+      - "5002:5002/tcp"
