@@ -1,5 +1,5 @@
 #Usando una imagen de base de python para facilitarnos la creacion de la imagen
-FROM python:latest
+FROM python:3.7
 #Creamos el directorio principal de trabajo
 RUN mkdir /app
 WORKDIR /app
