@@ -1,5 +1,5 @@
 #Usando una imagen de base de python para facilitarnos la creacion de la imagen
-FROM python:latest
+FROM python:3.7
 #Creamos el directorio principal de trabajo
 RUN mkdir /app
 WORKDIR /app
@@ -14,4 +14,5 @@ EXPOSE 5000
 #El comando ejecutado sera python -m flask run --host 0.0.0.0, de esta forma podremos acceder de forma correcta al servicio
 ENTRYPOINT ["python"]
 CMD ["-m", "flask", "run", "--host", "0.0.0.0"]
-#testci
+
+#Prueba CI en el bootcamp
