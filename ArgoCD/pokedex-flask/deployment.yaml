@@ -22,6 +22,6 @@ spec:
     spec:
       containers:
       - name: pokedex
-        image: zdenkoo98/pokedex-flask-nerdearla:12
+        image: nginx:latest
         ports:
         - containerPort: 5000
